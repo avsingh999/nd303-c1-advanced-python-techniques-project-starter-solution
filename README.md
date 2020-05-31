@@ -9,19 +9,25 @@ python3 main.py display -n 10 --date 2020-01-01
 ## Query
 #### For running an example of requirement 1: find a unique number of NEOs on a date that will be displayed to stdout
 
+```
 python3 main.py display -n 10 --date 2020-01-01
+```
+#### For running an example of requirement 2: find a unique number of NEOs between dates that are not hazardous. Results will be output to a csv.
 
-####For running an example of requirement 2: find a unique number of NEOs between dates that are not hazardous. Results will be output to a csv.
-
+```
 python3 main.py csv_file -n 10 --start_date 2020-01-01 --end_date 2020-01-10 --filter "is_hazardous:=:False"
+```
 
-####For running an example of requirement 3: find a unique number of NEOs between dates that are not hazardous, have a diameter greater than 0.02 units. Results will be output to a csv.
+#### For running an example of requirement 3: find a unique number of NEOs between dates that are not hazardous, have a diameter greater than 0.02 units. Results will be output to a csv.
 
+```
 python3 main.py csv_file -n 10 --start_date 2020-01-01 --end_date 2020-01-10 --filter "is_hazardous:=:False" "diameter:>:0.02"
+```
 #### For running an example of requirement 4: find a unique number of NEOs between dates that are not hazardous, have a diameter greater than 0.02 units, that were more than 50000 units away. Results will be output to a csv.
 
+```
 python3 main.py csv_file -n 10 --start_date 2020-01-01 --end_date 2020-01-10 --filter "is_hazardous:=:False" "diameter:>:0.02" "distance:>=:50000"
-
+```
 
 # Solutions
 
