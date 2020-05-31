@@ -1,6 +1,7 @@
 from enum import Enum
 import csv
 
+
 class OutputFormat(Enum):
     """
     Enum representing supported output formatting options for search results.
@@ -18,31 +19,28 @@ class OutputFormat(Enum):
 
 class NEOWriter(object):
     """
-    Python object use to write the results from supported output formatting options.
+    Python object use to write the results from supported
+    output formatting options.
     """
 
     def __init__(self):
-        # TODO: How can we use the OutputFormat in the NEOWriter?
         pass
 
     def write(self, format, data, **kwargs):
         """
-        Generic write interface that, depending on the OutputFormat selected calls the
-        appropriate instance write function
+        Generic write interface that, depending on the OutputFormat
+        selected calls the appropriate instance write function
 
         :param format: str representing the OutputFormat
         :param data: collection of NearEarthObject or OrbitPath results
-        :param kwargs: Additional attributes used for formatting output e.g. filename
+        :param kwargs: Additional attributes used for formatting
+         output e.g. filename
         :return: bool representing if write successful or not
         """
-        # TODO: Using the OutputFormat, how can we organize our 'write' logic for output to stdout vs to csvfile
-        # TODO: into instance methods for NEOWriter? Write instance methods that write() can call to do the necessary
-        # TODO: output format.
-
         if format == OutputFormat.display.value:
             print("OK")
             value = list(data[0].__dict__.keys())
-            print (*value, sep=('     :    '))
+            print(*value, sep=('     :    '))
             for d in data:
                 print(*d.__dict__.values(), sep=(':    '))
             return True
@@ -60,7 +58,8 @@ class NEOWriter(object):
                 for d in data:
                     d_dict = d.__dict__
                     for o in d.orbits:
-                        d_dict['miss_distance_kilometers'] = o.miss_distance_kilometers
+                        d_dict['miss_distance_kilometers'] =
+                        o.miss_distance_kilometers
                         d_dict['date'] = o.close_approach_date
                         writer.writerow(d_dict)
             return True

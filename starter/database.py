@@ -1,30 +1,35 @@
 from models import OrbitPath, NearEarthObject
 import csv
 
+
 class NEODatabase(object):
     """
     Object to hold Near Earth Objects and their orbits.
 
-    To support optimized date searching, a dict mapping of all orbit date paths to the Near Earth Objects
-    recorded on a given day is maintained. Additionally, all unique instances of a Near Earth Object
-    are contained in a dict mapping the Near Earth Object name to the NearEarthObject instance.
+    To support optimized date searching,
+    a dict mapping of all orbit date paths to the Near Earth Objects
+    recorded on a given day is maintained.
+    Additionally, all unique instances of a Near Earth Object
+    are contained in a dict mapping the
+    Near Earth Object name to the NearEarthObject instance.
     """
 
     def __init__(self, filename):
         """
-        :param filename: str representing the pathway of the filename containing the Near Earth Object data
+        :param filename:str representing the pathway of the filename
+        containing the Near Earth Object data
         """
-        # TODO: What data structures will be needed to store the NearEarthObjects and OrbitPaths?
-        # TODO: Add relevant instance variables for this.
         self.filename = filename
         self.NearEarthObjects = dict()
         self.OrbitPaths = []
 
     def load_data(self, filename=None):
         """
-        Loads data from a .csv file, instantiating Near Earth Objects and their OrbitPaths by:
+        Loads data from a .csv file,
+        instantiating Near Earth Objects and their OrbitPaths by:
            - Storing a dict of orbit date to list of NearEarthObject instances
-           - Storing a dict of the Near Earth Object name to the single instance of NearEarthObject
+           - Storing a dict of the Near Earth Object name to the
+             single instance of NearEarthObject
 
         :param filename:
         :return:
@@ -45,14 +50,18 @@ class NEODatabase(object):
 
                 neoModel = {
                     "id": row["neo_reference_id"],
-                    "name": row["name"], 
-                    "diameter_min_km": float(row["estimated_diameter_min_kilometers"]),
-                    "is_hazardous": True if row["is_potentially_hazardous_asteroid"] == "True" else False,
+                    "name": row["name"],
+                    "diameter_min_km": float(
+                        row["estimated_diameter_min_kilometers"]
+                    ),
+                    "is_hazardous": True
+                    if row["is_potentially_hazardous_asteroid"] == "True"
+                    else False,
                     "orbits": []
                     }
 
                 orbitPathModel = {
-                    "name" : row["name"],
+                    "name": row["name"],
                     "distance": float(row["miss_distance_kilometers"]),
                     "orbit_date": row["close_approach_date_full"]
                 }
@@ -63,7 +72,7 @@ class NEODatabase(object):
 
                 neoObject = NearEarthObject(**neoModel)
                 neoObject.update_orbits(orbitPath)
-                
+
                 if orb_date in self.NearEarthObjects:
                     self.NearEarthObjects[orb_date] += [neoObject]
                 else:

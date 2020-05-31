@@ -13,19 +13,32 @@ class TestNEOSearchUseCases(unittest.TestCase):
     Test Class with test cases for covering the core search functionality
     in the README.md#Requirements cases:
 
-    1.  Find up to some number of unique NEOs on a given date or between start date and end date.
-    2.  Find up to some number of unique NEOs on a given date or between start date and end date larger than X kilometers.
-    3.  Find up to some number of unique NEOs on a given date or between start date and end date larger than X kilometers
+    1.  Find up to some number of unique NEOs on a given date
+        or between start date and end date.
+    2.  Find up to some number of unique NEOs on a given date or
+        between start date and end date larger than X kilometers.
+    3.  Find up to some number of unique NEOs on a given date or
+        between start date and end date larger than X kilometers
         that were hazardous.
-    4.  Find up to some number of unique NEOs on a given date or between start date and end date larger than X kilometers
+    4.  Find up to some number of unique NEOs on a given date or
+        between start date and end date larger than X kilometers
         that were hazardous and within X kilometers from Earth.
 
-    Requirement one is tested in `test_find_unique_number_neos_on_date` and `test_find_unique_number_between_dates`
-    Requirement two is tested in `test_find_unique_number_neos_on_date_with_diameter`
+    Requirement one is tested in
+    `test_find_unique_number_neos_on_date`
+    and `test_find_unique_number_between_dates`
+
+    Requirement two is tested in
+    test_find_unique_number_neos_on_date_with_diameter`
     and `test_find_unique_number_between_dates_with_diameter`
-    Requirement three is tested in `test_find_unique_number_neos_on_date_with_diameter_and_hazardous` and
+
+    Requirement three is tested in
+    `test_find_unique_number_neos_on_date_with_diameter_and_hazardous` and
     `test_find_unique_number_neos_on_date_with_diameter_and_hazardous`
-    Requirement four is tested in `test_find_unique_number_neos_on_date_with_diameter_and_hazardous_and_distance` and
+
+    Requirement four is tested in
+    `test_find_unique_number_neos_on_date_with_diameter_and_hazardous_and_distance`
+    and
     `test_find_unique_number_between_dates_with_diameter_and_hazardous_and_distance`
     """
 
@@ -40,7 +53,10 @@ class TestNEOSearchUseCases(unittest.TestCase):
 
     def test_find_unique_number_neos_on_date(self):
         self.db.load_data()
-        query_selectors = Query(number=10, date=self.start_date, return_object='NEO').build_query()
+        query_selectors = Query(
+                                number=10,
+                                date=self.start_date,
+                                return_object='NEO').build_query()
         results = NEOSearcher(self.db).get_objects(query_selectors)
 
         # Confirm 10 results and 10 unique results
@@ -51,7 +67,10 @@ class TestNEOSearchUseCases(unittest.TestCase):
     def test_find_unique_number_between_dates(self):
         self.db.load_data()
         query_selectors = Query(
-            number=10, start_date=self.start_date, end_date=self.end_date, return_object='NEO'
+            number=10,
+            start_date=self.start_date,
+            end_date=self.end_date,
+            return_object='NEO'
         ).build_query()
         results = NEOSearcher(self.db).get_objects(query_selectors)
 
@@ -63,13 +82,21 @@ class TestNEOSearchUseCases(unittest.TestCase):
     def test_find_unique_number_neos_on_date_with_diameter(self):
         self.db.load_data()
         query_selectors = Query(
-            number=10, date=self.start_date, return_object='NEO', filter=["diameter:>:0.042"]
+            number=10,
+            date=self.start_date,
+            return_object='NEO',
+            filter=["diameter:>:0.042"]
         ).build_query()
         results = NEOSearcher(self.db).get_objects(query_selectors)
 
         # Confirm 4 results and 4 unique results
         self.assertEqual(len(results), 4)
-        neo_ids = list(filter(lambda neo: neo.diameter_min_km > 0.042, results))
+        neo_ids = list(
+                        filter(
+                                lambda neo: neo.diameter_min_km > 0.042,
+                                results
+                            )
+                        )
         neo_ids = set(map(lambda neo: neo.name, results))
         self.assertEqual(len(neo_ids), 4)
 
@@ -83,7 +110,12 @@ class TestNEOSearchUseCases(unittest.TestCase):
 
         # Confirm 10 results and 10 unique results
         self.assertEqual(len(results), 10)
-        neo_ids = list(filter(lambda neo: neo.diameter_min_km > 0.042, results))
+        neo_ids = list(
+                        filter(
+                                lambda neo: neo.diameter_min_km > 0.042,
+                                results
+                            )
+                        )
         diameter = set(map(lambda neo: neo.diameter_min_km, results))
         neo_ids = set(map(lambda neo: neo.name, results))
         self.assertEqual(len(neo_ids), 10)
@@ -91,15 +123,25 @@ class TestNEOSearchUseCases(unittest.TestCase):
     def test_find_unique_number_neos_on_date_with_diameter_and_hazardous(self):
         self.db.load_data()
         query_selectors = Query(
-            number=10, date=self.start_date, return_object='NEO', filter=["diameter:>:0.042", "is_hazardous:=:True"]
+            number=10,
+            date=self.start_date,
+            return_object='NEO',
+            filter=["diameter:>:0.042", "is_hazardous:=:True"]
         ).build_query()
         results = NEOSearcher(self.db).get_objects(query_selectors)
 
         # Confirm 0 results and 0 unique results
         self.assertEqual(len(results), 0)
-        neo_ids = list(filter(
-            lambda neo: neo.diameter_min_km > 0.042 and neo.is_potentially_hazardous_asteroid, results
-        ))
+        neo_ids = list(
+                        filter(
+                                lambda neo: (
+                                                neo.diameter_min_km > 0.042
+                                                and
+                                                neo.is_potentially_hazardous_asteroid
+                                            ),
+                                results
+                            )
+                        )
         neo_ids = set(map(lambda neo: neo.name, results))
         self.assertEqual(len(neo_ids), 0)
 
