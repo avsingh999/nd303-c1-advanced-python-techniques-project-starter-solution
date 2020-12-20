@@ -1,68 +1,165 @@
-# Install & Run
-```
-create envirment
-activate envirment
-pip3 install -r requirement.txt
+# Explore Close Approaches of Near-Earth Objects
 
-python3 main.py display -n 10 --date 2020-01-01
-```
-## Query
-#### For running an example of requirement 1: find a unique number of NEOs on a date that will be displayed to stdout
+In this project, you'll use Python - and the skills we've developed throughout this course - to search for and explore close approaches of near-Earth objects (NEOs), using data from NASA/JPL's Center for Near Earth Object Studies.
 
-```
-python3 main.py display -n 10 --date 2020-01-01
-```
-![Query 1](q_1.png)
-#### For running an example of requirement 2: find a unique number of NEOs between dates that are not hazardous. Results will be output to a csv.
+## Overview
 
-```
-python3 main.py csv_file -n 10 --start_date 2020-01-01 --end_date 2020-01-10 --filter "is_hazardous:=:False"
-```
-![Query 2](q_2_a.png)
+At a high-level, you'll create Python code that implements a command-line tool to inspect and query a dataset of NEOs and their close approaches to Earth.
 
-![Query 2](q_2_b.png)
-#### For running an example of requirement 3: find a unique number of NEOs between dates that are not hazardous, have a diameter greater than 0.02 units. Results will be output to a csv.
+Concretely, you'll have to read data from both a CSV file and a JSON file, convert that data into structured Python objects, perform filtering operations on the data, limit the size of the result set, and write the results to a file in a structured format, such as CSV or JSON.
 
-```
-python3 main.py csv_file -n 10 --start_date 2020-01-01 --end_date 2020-01-10 --filter "is_hazardous:=:False" "diameter:>:0.02"
-```
-![Query 3](q_3_a.png)
-![Query 3 Output](q_3_b.png)
-#### For running an example of requirement 4: find a unique number of NEOs between dates that are not hazardous, have a diameter greater than 0.02 units, that were more than 50000 units away. Results will be output to a csv.
+When complete, you'll be able to inspect the properties of the near-Earth objects in the data set and query the data set of close approaches to Earth using any combination of the following filters:
+
+- Occurs on a given date.
+- Occurs on or after a given start date.
+- Occurs on or before a given end date.
+- Approaches Earth at a distance of at least (or at most) X astronomical units.
+- Approaches Earth at a relative velocity of at least (or at most) Y kilometers per second.
+- Has a diameter that is at least as large as (or at least as small as) Z kilometers.
+- Is marked by NASA as potentially hazardous (or not).
+
+## Project Scaffolding
+
+Upon starting, the project contains several files and folders to help you get up and running:
 
 ```
-python3 main.py csv_file -n 10 --start_date 2020-01-01 --end_date 2020-01-10 --filter "is_hazardous:=:False" "diameter:>:0.02" "distance:>=:50000"
+.
+├── README.md       # This file.
+├── main.py
+├── models.py       # Task 1.
+├── read.py         # Task 2a.
+├── database.py     # Task 2b and Task 3b.
+├── filters.py      # Task 3a and Task 3c.
+├── write.py        # Task 4.
+├── helpers.py
+├── data
+│   ├── neos.csv
+│   └── cad.json
+└── tests
+    ├── test-neos-2020.csv
+    ├── test-cad-2020.json
+    ├── test_*.py
+    ├── ...
+    └── test_*.py
 ```
-![Query 4](q_4_a.png)
-![Query 4 Output](q_4_b.png)
-# Solutions
 
-### Task 1
-```model.py```
-1. first initialize variable  id, diameter, name, is_potentially_hazardous_asteroid, orbits  NearEarthObject constructor (__init__) .
-2. update orbits function update orbits of neo like append the data in orbits variable which is initialized by the constructor
-3. In class OrbitPath initialize variable with value of neo data,  variable neo_name, miss_distance_kilometers, close_aproach_Date
+Let's take a closer look at the purpose of each of these files and folders:
 
-### Task 2
-```database.py```
-1. First initialize variable like filename, NearEarthObjects, OrbitPaths in the constructor
-2. In load data function to read the file using CSV lib of python.
-3. Run for loop and get data line by line from CSV
-4. create NearEarthObject and OrbitPath object while reading the data line by line
+- `main.py`: The main Python script that wraps the command-line tool, orchestrates the data pipeline by invoking the functions and classes that you'll write. **You will not need to modify this file.**
+- `models.py`: In this file, you'll define Python objects to represent a `NearEarthObject` and a `CloseApproach`. These objects will have a few attributes, a human-readable string representatino, and perhaps a property or a method here or there.
+- `extract.py`: In this file, you'll write functions to read information from data files, creating `NearEarthObject`s and `CloseApproaches` from the data.
+- `database.py`: In this file, you'll define an `NEODatabase` class to encapsulate the entire data set (connecting NEOs and close approaches) and write methods to get NEOs by primary designation and by name, as well as to query the dataset with a collection of user-specified filters to generate an iterable stream of matching results.
+- `filters.py`: In this file, you'll create a plethora of filters to be used in conjuction with the `NEODatabase` to query for a stream of matching close approaches. You'll also write a utility function to limit the number of results produced from a stream.
+- `write.py`: Finally, in this file, you'll implement functions to write a stream of results (the `CloseApproach` objects generated by the `NEODatabase`) to a file either in JSON format or in CSV format.
+- `helpers.py`: A simple module that provides a few helpful utility functions to convert to and from datetime objects.
 
-### Task 3
-```search.py```
-1. Initialize some variable in Query class constructor number, date, start_date, end_date, filters, return_objects
-2. build_query function create date_serach namedtuple according to date search if exact date search then equal, DateSearch nametuple otherwise between date_serach namedtuple create
-3. lastly create Selectors namedtuple and return this created Selector namedtuple
-4. In filter, class add Options like diameter, distance, is_hazardous. and add operators like greater than, equal, greaterthenequal
-5.in constructor initialize all variable which is a parameter of constructor
-6.and create_filter_options method create defaultdict variable where I store NEO, and ORB data like if the diameter or is_hazardous is given in filter then append in NEO default dict if the distance is given then I append data in ORB where (ORB, NEO is key in defaultDict) and return default dict from this function
-7. In the apply method, I filtered the data using filter options and return resulted data
-8. In NEOSearcher class  I create two method equal_serach and between the search for search data by date and call function according to the user query and return resulted data
+The data files are located in the `data/` folder.
 
-### Task 4
-```writer.py```
-1. There are two types of the show resulted data 1st is displayed on terminal 2nd one is write in CSV file
-2. for first I simply run the for loop and convert each line convert to __dict__ and print.
-3 for 2nd create otput.csv file and write the data line by line in CSV file
+Additionally, the starter code includes unit tests that will help you check your progress as you advance through this project. The unit tests all live in the `tests/` folder. When the project is fully implemented, all of the unit tests should pass. To run all of the tests, you can use `python3 -m unittest --verbose` at the command line, although many tests will currently fail since the project isn't yet finished.
+.
+### Task 1:
+
+- A `NearEarthObject` class, to represent the data for a single near-Earth object.
+
+1.  Check if info is null/empty.
+2. Check if info has required data is present or not if not then store None otherwise store value
+3. IsBlank(string) function to check string is Blank or not
+4. addCAD(approach)  function to add new cad to neo object.
+5. NearEarthObject has variable designation, name, hazardous, diameter, approaches (list).
+
+- A `CloseApproach` class, to represent the data for a single close approach of an NEO.
+1. Get rquired data from ** info and store into CloseApproach class variable.
+2. setNeo function is to set NearEarthObject class object function for that Approach.
+
+
+### Task 2: Extract data from structures files into Python objects.
+`extract.py`
+
+- store all NearEarthObject object in neos list.
+- store all CloseApproach obeject in approaches list.
+- neos_id is map to store neos list element index with  NearEarthObject object designation.
+
+`load_neos(....) function `
+
+1. Read the request csv using csv python library with DictReader function.
+2. Exract the required data from every row in csv file.
+3. create Object from that exracted data and append that object into neos list.
+4. update neos_id with designation and index of neos list.
+
+`load_approaches(....) function `
+1. Open requested json file using json python lib. and read the data.
+2. json file fields are store in fields variable.
+3. fileds name and index store with variable key map.
+4. extract the required data fields using key and create CloseApproach object.
+5. check if desingation of that object is present or not in neos_id map.
+6. get that designation neo object from neos list using neos_id.
+7. set Neo object to CloseApproach object and vice versa.
+8. append that new CloseApproach object to approaches list.
+
+
+
+
+### Task 3: Query close approaches with user-specified criteria.
+
+
+#### Task 3a: Creating filters.
+
+`filters.py`
+
+1. Implement Date Class and write overrride get method of AttributeFilter.
+2. return date type object of that requested approach.
+3. Create Distance, Velocity, Hazardous, Diameter class and overrider get method and return required data for each class filter.
+
+`create_filter_function(..)`
+1. Create class Object for requested filter using operator and value.
+2. append that created object to filters_map list.
+
+
+#### Task 3b: Query the database of close approaches using user-specified criteria.
+
+`database.py`
+`get_neo_by_designation(..)`
+1. return neo object for requested designation.
+
+`get_neo_by_name(..)`
+1. return neo object for requested name.
+
+`query(...)`
+1. Implement Query function for execute filters.
+2.  every approach filter with reqeusted fillter and count.
+3. if  approach is reutrn by after all filter class then append to result. 
+
+#### Task 3c: Limit the results to at most some maximum number.
+1. convert iterator to list and return that list for request n elements.
+2. check if n is less than to iterator length.
+
+
+
+### Task 4: Report the results.
+
+- `write_to_csv`: Write a stream of `CloseApproach` objects to a specific CSV file.
+1. create file with requested name and open it.
+2. all requested filedsname store in variable and write header for that csv file.
+3. create a new variable with name "row" and append that required data with map from results.
+4. write every row in csv file.
+
+
+- `write_to_json`: Write a stream of `CloseApproach` objects to a specific JSON file.
+1. create file with requested name and open it.
+2. intitalize dump_data list .
+3. create a new map variable with data and add required data and append to dump_data list.
+4. dump all dump_data data in json file.
+
+
+### Results
+
+
+```
+$ python3 -m unittest
+```
+
+
+```
+$ python3 -m unittest --verbose tests.test_python_version
+
+```
