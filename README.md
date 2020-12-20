@@ -157,9 +157,20 @@ Additionally, the starter code includes unit tests that will help you check your
 ```
 $ python3 -m unittest
 ```
-
-
-```
-$ python3 -m unittest --verbose tests.test_python_version
+<img src="all_test.PNG">
 
 ```
+ python3 -m unittest tests.test_query tests.test_limit
+```
+
+<img src="t2.PNG">
+
+```
+python3 -m unittest --verbose tests.test_query
+```
+<img src="t4.PNG">
+
+```
+python3 -m unittest --verbose tests.test_extract tests.test_database
+```
+<img src="t5.PNG">
