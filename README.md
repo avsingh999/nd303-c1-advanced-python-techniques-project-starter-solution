@@ -92,9 +92,9 @@ Upon starting, the project contains several files and folders to help you get up
 
 `filters.py`
 
-1. Implement Date Class and write overrride get method of AttributeFilter.
+1. Implement Date Class and write override get method of AttributeFilter.
 2. return date type object of that requested approach.
-3. Create Distance, Velocity, Hazardous, Diameter class and overrider get method and return required data for each class filter.
+3. Create Distance, Velocity, Hazardous, Diameter class and override get method and return required data for each class filter.
 
 `create_filter_function(..)`
 1. Create class Object for requested filter using operator and value.
@@ -117,7 +117,7 @@ Upon starting, the project contains several files and folders to help you get up
 
 #### Task 3c: Limit the results to at most some maximum number.
 1. convert iterator to list and return that list for request n elements.
-2. check if n is less than to iterator length.
+2. check if n is less than from iterator length.
 
 
 
